@@ -1,0 +1,41 @@
+name: Run library alt text bot
+
+on:
+  # Runs every 30 minutes during the day
+  schedule:
+    - cron: "*/30 8-22 * * *"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  scheduled-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          
+      - name: Install project dependencies
+        run: npm install
+        
+      - name: Run the bot
+        run: node app.js
+
+      - name: Check for changed files 
+        run: git status
+    
+      - name: Commit changed files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Auto-update of bot schedule files"
+
+      - name: Fetch main
+        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+      
+      - name: Push main
+        run: git push origin HEAD:main
+      
