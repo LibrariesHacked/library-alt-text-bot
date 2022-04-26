@@ -2,6 +2,8 @@ import * as fs from 'fs'
 import Twitter from 'twitter-lite'
 import 'dotenv/config'
 
+const delay = ms => new Promise(res => setTimeout(res, ms))
+
 let counter = 0
 
 try {
@@ -16,8 +18,6 @@ const app = new Twitter({
 })
 
 const user = new Twitter({
-  version: '2',
-  extension: false,
   access_token_key: process.env.ACCESS_TOKEN,
   access_token_secret: process.env.ACCESS_SECRET,
   consumer_key: process.env.CONSUMER_KEY,
@@ -40,11 +40,12 @@ const lists = [
 
 let tweets = []
 let mediaItems = []
+let users = []
 
 for (const twitterList of lists) {
   const apiUrl = 'lists/' + twitterList.id + '/tweets'
   let params = {
-    expansions: 'attachments.media_keys',
+    expansions: 'author_id,attachments.media_keys',
     'media.fields': 'alt_text',
     'tweet.fields': 'referenced_tweets'
   }
@@ -62,6 +63,7 @@ for (const twitterList of lists) {
 
       tweets = tweets.concat(data)
       if (includes.media) mediaItems = mediaItems.concat(includes.media)
+      if (includes.users) users = users.concat(includes.users)
     } catch (err) {}
   } while (nextToken !== '')
 }
@@ -70,6 +72,7 @@ const uniqueTweets = [...new Map(tweets.map(item => [item.id, item])).values()]
 const uniqueMedia = [
   ...new Map(mediaItems.map(item => [item.media_key, item])).values()
 ]
+const uniqueUsers = [...new Map(users.map(item => [item.id, item])).values()]
 
 const tweetsWithNoAltText = uniqueTweets.filter(tweet => {
   let countImagesWithNoAltText = 0
@@ -86,6 +89,7 @@ const tweetsWithNoAltText = uniqueTweets.filter(tweet => {
     }
   }
   tweet.countImagesWithNoAltText = countImagesWithNoAltText
+  tweet.user = uniqueUsers.find(item => item.id === tweet.author_id)
   return countImagesWithNoAltText > 0
 })
 
@@ -106,14 +110,12 @@ for (const tweet of tweetsWithNoAltText) {
     'This tweet contains ' +
     imageCount.toString() +
     (imageCount === 1 ? ' image' : ' images') +
-    ' with no alt text. \n\nAlt text is important for blind and partially sighted people who use screen readers. More info at https://gcs.civilservice.gov.uk/guidance/digital-communication/planning-creating-and-publishing-accessible-social-media-campaigns/#Accessibility-best-practice-for-community-managers-and-publishers'
+    ' with no alt text.\n\nAlt text is important for blind and partially sighted people who use screen readers. More info at https://gcs.civilservice.gov.uk/guidance/digital-communication/planning-creating-and-publishing-accessible-social-media-campaigns/#Accessibility-best-practice-for-community-managers-and-publishers'
   try {
-    const { data } = await user.post('tweets', {
-      tweet: tweetText,
-      quote_tweet_id: tweet.id
+    const { data } = await user.post('statuses/update', {
+      status: tweetText,
+      attachment_url: `https://twitter.com/${tweet.user.username}/status/${tweet.id}`
     })
-    console.log(data)
-  } catch (err) {
-    console.log(err)
-  }
+    await delay(2000)
+  } catch (err) {}
 }
