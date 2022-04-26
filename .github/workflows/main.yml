@@ -23,11 +23,11 @@ jobs:
       - name: Run the bot
         env:
           ## Twitter API Keys for the bot
-          BEARER_TOKEN:${{secrets.BEARER_TOKEN}}
-          ACCESS_TOKEN:${{secrets.ACCESS_TOKEN}}
-          ACCESS_SECRET:${{secrets.ACCESS_SECRET}}
-          CONSUMER_KEY:${{secrets.CONSUMER_KEY}}
-          CONSUMER_SECRET:${{secrets.CONSUMER_SECRET}}
+          BEARER_TOKEN: ${{secrets.BEARER_TOKEN}}
+          ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
+          ACCESS_SECRET: ${{secrets.ACCESS_SECRET}}
+          CONSUMER_KEY: ${{secrets.CONSUMER_KEY}}
+          CONSUMER_SECRET: ${{secrets.CONSUMER_SECRET}}
         run: node app.js
 
       - name: Check for changed files
