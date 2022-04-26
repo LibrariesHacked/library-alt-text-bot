@@ -26,16 +26,17 @@ const user = new Twitter({
 
 // These are Twitter Lists of library accounts, managed by SarahHLib
 const lists = [
-  //{ listname:'uk-libraries', id: '973903152499036160' },
+  { listname: 'uk-libraries', id: '973903152499036160' },
   //{ listname:'non-uk-libraries', id: '874267472064651264' },
   //{ listname:'uk-sch-fe-lib', id: '866586695713656833' },
   //{ listname:'other-libraries-uk', id: '865613485127946241' },
-  //{ listname:'national-libraries', id: '865613046831616000' },
+  { listname: 'national-libraries', id: '865613046831616000' },
   //{ listname:'uk-public-libraries', id: '865611336323039232' },
   //{ listname:'uk-academic-libraries', id: '865604910699642880' },
   //{ listname:'uk-med-libraries', id: '865597171596484609' },
   //{ listname:'uk-mobile-libraries', id: '1111219227619442688' },
-  { listname: 'list-testing', id: '1517219733124362241' }
+  //{ listname: 'list-testing', id: '1517219733124362241' },
+  { listname: 'uk-library-organisations', id: '1519021011718574087' }
 ]
 
 let tweets = []
