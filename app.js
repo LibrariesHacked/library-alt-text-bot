@@ -16,6 +16,8 @@ const app = new Twitter({
 })
 
 const user = new Twitter({
+  version: '2',
+  extension: false,
   access_token_key: process.env.ACCESS_TOKEN,
   access_token_secret: process.env.ACCESS_SECRET,
   consumer_key: process.env.CONSUMER_KEY,
@@ -98,4 +100,20 @@ if (tweetsWithNoAltText.length > 0) {
   })
 }
 
-console.log(tweetsWithNoAltText)
+for (const tweet of tweetsWithNoAltText) {
+  const imageCount = tweet.countImagesWithNoAltText
+  var tweetText =
+    'This tweet contains ' +
+    imageCount.toString() +
+    (imageCount === 1 ? ' image' : ' images') +
+    ' with no alt text. \n\nAlt text is important for blind and partially sighted people who use screen readers. More info at https://gcs.civilservice.gov.uk/guidance/digital-communication/planning-creating-and-publishing-accessible-social-media-campaigns/#Accessibility-best-practice-for-community-managers-and-publishers'
+  try {
+    const { data } = await user.post('tweets', {
+      tweet: tweetText,
+      quote_tweet_id: tweet.id
+    })
+    console.log(data)
+  } catch (err) {
+    console.log(err)
+  }
+}
