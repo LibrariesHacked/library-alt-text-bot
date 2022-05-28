@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/LibrariesHacked/library-alt-text-bot#readme",
   "dependencies": {
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "twitter-lite": "^1.1.0"
   },
   "type": "module"

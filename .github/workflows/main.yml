@@ -3,7 +3,7 @@ name: Run library alt text bot
 on:
   # Runs every 30 minutes during the day
   schedule:
-    - cron: '*/30 7-22 * * *'
+    - cron: '*/30 6-20 * * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
 
       - name: Run the bot
         env:
-          ## Twitter API Keys for the bot
+          ## Twitter API Keys for the bot taken from secrets
           BEARER_TOKEN: ${{secrets.BEARER_TOKEN}}
           ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
           ACCESS_SECRET: ${{secrets.ACCESS_SECRET}}
